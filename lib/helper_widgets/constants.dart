@@ -1,5 +1,5 @@
 abstract class Constants {
-  static const poiretOne = 'PoiretOne';
+  static const mulish = 'Mulish';
   static const spartan = 'Spartan';
   static const appName = "MedEase";
 }

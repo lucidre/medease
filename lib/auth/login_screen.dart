@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:medease/auth/forgot_password_screen.dart';
-import 'package:medease/auth/register_screen.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/helper_widgets/page_route.dart';
+import 'package:medease/about_us/about_us_screen.dart';
+import 'package:medease/main/profile_screen.dart';
+
+import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_route.dart';
+import 'forgot_password_screen.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,13 +17,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   static const _registrationNumber = "registrationNumber";
   static const _password = "password";
-  var _saveUser = false;
+  static const _saveUser = 'saveUser';
+
   bool _isHidden = true;
   final _passwordFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
-  final _initValues = {
+  final Map<String, dynamic> _initValues = {
     _registrationNumber: '',
     _password: '',
+    _saveUser: false
   };
 
   @override
@@ -34,8 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if ((isValid ?? false) == false) {
       return false;
     }
+
     _form.currentState?.save();
-    //save here
+    var navigatorState = Navigator.of(context);
+    navigatorState.pushAndRemoveUntil(
+        CustomPageRoute(screen: const ProfileScreen()), (route) => false);
     return true;
   }
 
@@ -89,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 8,
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -169,10 +177,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: textStyle2.copyWith(color: Colors.black),
                           ),
                           controlAffinity: ListTileControlAffinity.leading,
-                          value: _saveUser,
+                          value: _initValues[_saveUser] as bool,
                           onChanged: (newValue) {
                             setState(() {
-                              _saveUser = newValue ?? false;
+                              _initValues[_saveUser] = newValue ?? false;
                             });
                           },
                           activeColor: Colors.blue,
@@ -230,7 +238,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton(
                       onPressed: () {
-                        _saveForm();
                         Navigator.of(context).push(
                           CustomPageRoute(
                             screen: const RegisterScreen(),

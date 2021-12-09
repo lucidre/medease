@@ -59,6 +59,8 @@ class IntroViewsFlutter extends StatefulWidget {
   /// always Show DoneButton
   final bool doneButtonPersist;
 
+  final Function(int) onPageSwiped;
+
   /// [MainAxisAlignment] for [PageViewModel] page column aligment
   /// default [MainAxisAligment.spaceAround]
   ///
@@ -76,6 +78,7 @@ class IntroViewsFlutter extends StatefulWidget {
     this.pages, {
     Key? key,
     this.onTapDoneButton,
+    required this.onPageSwiped,
     this.showSkipButton = true,
     this.pageButtonTextStyles,
     this.pageButtonTextSize = 18.0,
@@ -133,6 +136,7 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
           } else {
             nextPageIndex = activePageIndex;
           }
+          widget.onPageSwiped(nextPageIndex);
         }
         //if the user has done dragging
         else if (event.updateType == UpdateType.doneDragging) {

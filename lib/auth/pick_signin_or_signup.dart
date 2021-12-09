@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:medease/auth/login_screen.dart';
-import 'package:medease/auth/register_screen.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/helper_widgets/page_route.dart';
+
+import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_route.dart';
+import 'login_screen.dart';
+import 'register_screen.dart';
 
 class PickSignInOrLoginScreen extends StatelessWidget {
   const PickSignInOrLoginScreen({Key? key}) : super(key: key);

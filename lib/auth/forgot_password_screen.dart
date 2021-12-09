@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/helper_widgets/page_route.dart';
-import 'package:medease/main/main_screen.dart';
+
+import '../helper_widgets/colors.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   static const registrationNumber = "registrationNumber";
   static const studentEmail = "studentEmail";
-  final _regisitrationNumberFocusNode = FocusNode();
+  final _registrationNumberFocusNode = FocusNode();
 
   final _form = GlobalKey<FormState>();
   final _initValues = {
@@ -23,7 +22,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   void dispose() {
-    _regisitrationNumberFocusNode.dispose();
+    _registrationNumberFocusNode.dispose();
     super.dispose();
   }
 
@@ -33,7 +32,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       return false;
     }
     _form.currentState?.save();
-    //save here
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('reset password link sent to mail')));
     return true;
   }
 
@@ -69,7 +69,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   backgroundColor: Colors.blue,
                 ),
                 const SizedBox(
-                  height: 8,
+                  height: 15,
                 ),
                 Text(
                   'Forgot Your Password',
@@ -77,13 +77,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       .copyWith(fontSize: 38, color: AppColors.color3),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 SizedBox(
                   width: double.infinity,
                   child: Text(
                     "Enter your student email and we'll send you a link to reset your password",
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: textStyle2,
                   ),
                 ),
@@ -98,7 +98,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   style: textStyle2,
                   onFieldSubmitted: (_) {
                     FocusScope.of(context)
-                        .requestFocus(_regisitrationNumberFocusNode);
+                        .requestFocus(_registrationNumberFocusNode);
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -116,7 +116,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 TextFormField(
                   textInputAction: TextInputAction.done,
                   decoration: const InputDecoration(
-                    labelText: "Regsitration Number ",
+                    labelText: "Registration Number ",
                   ),
                   style: textStyle2,
                   validator: (value) {
@@ -144,10 +144,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                       onPressed: () {
                         _saveForm();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Password recovery')));
-                        Navigator.of(context)
-                            .push(CustomPageRoute(screen: const MainScreen()));
                       },
                       child: const Text(
                         'Submit',

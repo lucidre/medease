@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/onboarding/onboarding_screen.dart';
+import 'package:medease/helper_widgets/page_route.dart';
+
+import '../helper_widgets/colors.dart';
+import '../onboarding/onboarding_screen.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);
@@ -41,9 +43,7 @@ class _IntroScreenState extends State<IntroScreen> {
             ),
             Text(
               'MedEase',
-              style: themeData
-                  .textTheme
-                  .headline1!
+              style: themeData.textTheme.headline1!
                   .copyWith(fontSize: 38, color: AppColors.color3),
             ),
           ],
@@ -59,8 +59,8 @@ class _IntroScreenState extends State<IntroScreen> {
   }
 
   void route() {
-    Navigator.of(context).pushReplacement(PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const OnBoardingScreen()));
+    Navigator.of(context)
+        .pushReplacement(CustomPageRoute(screen: const OnBoardingScreen()));
   }
 
   Future startTime() async {

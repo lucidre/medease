@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:medease/auth/verification_screen.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/helper_widgets/page_route.dart';
+
+import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_route.dart';
+import 'verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -51,10 +52,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-     _saveForm() {
+  _saveForm() {
     final isValid = _form.currentState?.validate();
     if ((isValid ?? false) == false) {
-      return ;
+      return;
     }
     _form.currentState?.save();
     Navigator.of(context).push(
@@ -114,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 8,
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -183,7 +184,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordHidden ? Icons.visibility : Icons.visibility_off,
+                        _isPasswordHidden
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                         color: AppColors.primary,
                       ),
                       onPressed: () {
@@ -198,8 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please provide  your password';
-                    }
-                    else if (value != retypePassword) {
+                    } else if (value != retypePassword) {
                       return 'Passwords are not the same';
                     }
                     return null;
@@ -226,7 +228,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isRetypePasswordHidden ? Icons.visibility : Icons.visibility_off,
+                        _isRetypePasswordHidden
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                         color: AppColors.primary,
                       ),
                       onPressed: () {
@@ -247,7 +251,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                   onSaved: (value) {
-               //
+                    //
                   },
                 ),
                 const SizedBox(
@@ -291,7 +295,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    //
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Terms clicked')));
                   },
                   child: const Text(
                     'Terms of use. Privacy policy',
