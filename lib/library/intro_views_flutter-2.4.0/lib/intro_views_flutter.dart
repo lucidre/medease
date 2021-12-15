@@ -46,7 +46,7 @@ class IntroViewsFlutter extends StatefulWidget {
   /// set the Font Family for skip, done buttons
   ///
   /// gets overridden by [pageButtonTextStyles]
-  final String?  pageButtonFontFamily;
+  final String? pageButtonFontFamily;
 
   /// Override 'DONE' Text with Your Own Text,
   /// typicaly a Text Widget
@@ -58,8 +58,6 @@ class IntroViewsFlutter extends StatefulWidget {
 
   /// always Show DoneButton
   final bool doneButtonPersist;
-
-  final Function(int) onPageSwiped;
 
   /// [MainAxisAlignment] for [PageViewModel] page column aligment
   /// default [MainAxisAligment.spaceAround]
@@ -78,7 +76,6 @@ class IntroViewsFlutter extends StatefulWidget {
     this.pages, {
     Key? key,
     this.onTapDoneButton,
-    required this.onPageSwiped,
     this.showSkipButton = true,
     this.pageButtonTextStyles,
     this.pageButtonTextSize = 18.0,
@@ -136,7 +133,6 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
           } else {
             nextPageIndex = activePageIndex;
           }
-          widget.onPageSwiped(nextPageIndex);
         }
         //if the user has done dragging
         else if (event.updateType == UpdateType.doneDragging) {
@@ -188,9 +184,9 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
 
   @override
   void dispose() {
-    slideUpdateStream$?.cancel();
-    animatedPageDragger?.dispose();
-    slideUpdateStream?.close();
+    slideUpdateStream$.cancel();
+    animatedPageDragger.dispose();
+    slideUpdateStream.close();
     super.dispose();
   }
 
@@ -240,7 +236,8 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
             textStyle: textStyle,
             acitvePageIndex: activePageIndex,
             totalPages: pages.length,
-            onPressedDoneButton: widget.onTapDoneButton, //void Callback to be executed after pressing done button
+            onPressedDoneButton: widget
+                .onTapDoneButton, //void Callback to be executed after pressing done button
             slidePercent: slidePercent,
             slideDirection: slideDirection,
             onPressedSkipButton: () {

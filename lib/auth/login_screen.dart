@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medease/about_us/about_us_screen.dart';
+import 'package:medease/helper_widgets/auth.dart';
 import 'package:medease/main/profile_screen.dart';
 
 import '../helper_widgets/colors.dart';
@@ -17,15 +17,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   static const _registrationNumber = "registrationNumber";
   static const _password = "password";
-  static const _saveUser = 'saveUser';
 
   bool _isHidden = true;
   final _passwordFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
   final Map<String, dynamic> _initValues = {
     _registrationNumber: '',
-    _password: '',
-    _saveUser: false
+    _password: ''
   };
 
   @override
@@ -34,17 +32,80 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  bool _saveForm() {
+  Future showLoginStatus() async {
+    var textTheme = Theme.of(context).textTheme.bodyText1;
+
+    Dialog dialog = Dialog(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      elevation: 5,
+      child: Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            borderRadius: const BorderRadius.all(Radius.circular(15))),
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator.adaptive()),
+            const SizedBox(
+              height: 30,
+            ),
+            Text(
+              'Loading....',
+              style: textTheme,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "Progressbar",
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (_, __, ___) => dialog,
+      transitionBuilder: (_, anim, __, child) => FadeTransition(
+        opacity: Tween(begin: 0.0, end: 1.0).animate(anim),
+        child: child,
+      ),
+    );
+
+    var navigatorState = Navigator.of(context);
+
+    final registrationNumber = _initValues[_registrationNumber];
+    final password = _initValues[_password];
+    final String response =
+        await login(registration: registrationNumber, password: password);
+    switch (response) {
+      case '--':
+        //login successful_proceed
+        navigatorState.pop();
+        navigatorState.pushAndRemoveUntil(
+            CustomPageRoute(screen: const ProfileScreen()), (route) => false);
+        break;
+      default:
+        //error occurred, handle error
+        navigatorState.pop();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(response)));
+        break;
+    }
+  }
+
+  void _saveForm() {
     final isValid = _form.currentState?.validate();
     if ((isValid ?? false) == false) {
-      return false;
+      return;
     }
-
     _form.currentState?.save();
-    var navigatorState = Navigator.of(context);
-    navigatorState.pushAndRemoveUntil(
-        CustomPageRoute(screen: const ProfileScreen()), (route) => false);
-    return true;
+    //login user here
+    showLoginStatus();
   }
 
   @override
@@ -121,7 +182,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please provide your registration number.';
-                    }
+                    } /* else if (!RegExp(r"[a-zA-Z]{3}\/[0-9]{4}\/[0-9]+")
+                        .hasMatch(value)) {
+                      return "Please provide a valid registration number";
+                    }*/
                     return null;
                   },
                   onSaved: (value) {
@@ -156,6 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please provide  your password';
+                    } else if (value.length < 6) {
+                      return 'Password must be more than 6 letters';
                     }
                     return null;
                   },
@@ -166,51 +232,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 5,
                 ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: CheckboxListTile(
-                          contentPadding: const EdgeInsets.all(0),
-                          title: Text(
-                            'Remember User?',
-                            style: textStyle2.copyWith(color: Colors.black),
-                          ),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: _initValues[_saveUser] as bool,
-                          onChanged: (newValue) {
-                            setState(() {
-                              _initValues[_saveUser] = newValue ?? false;
-                            });
-                          },
-                          activeColor: Colors.blue,
-                          checkColor: Colors.white,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => const ForgotPassword(),
-                            transitionsBuilder: (_, Animation<double> animation,
-                                __, Widget widget) {
-                              return Opacity(
-                                opacity: animation.value,
-                                child: widget,
-                              );
-                            },
-                            transitionDuration:
-                                const Duration(milliseconds: 1500),
-                          ));
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const ForgotPassword(),
+                        transitionsBuilder: (_, Animation<double> animation, __,
+                            Widget widget) {
+                          return Opacity(
+                            opacity: animation.value,
+                            child: widget,
+                          );
                         },
-                        child: const Text(
-                          'Forgot Password?',
-                        ),
-                        style: TextButton.styleFrom(
-                          textStyle:
-                              textStyle2.copyWith(color: Colors.lightBlue),
-                        ),
-                      ),
-                    ]),
+                        transitionDuration: const Duration(milliseconds: 1500),
+                      ));
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                    ),
+                    style: TextButton.styleFrom(
+                      textStyle: textStyle2.copyWith(color: Colors.lightBlue),
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 25,
                 ),

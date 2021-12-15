@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medease/helper_widgets/auth.dart';
 import 'package:provider/provider.dart';
 
 import '../about_us/about_us_screen.dart';
@@ -43,6 +44,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
       case MenuModel.signOut:
         {
+          logOut();
           navigatorState.pushAndRemoveUntil(
               CustomPageRoute(screen: const PickSignInOrLoginScreen()),
               (route) => false);
