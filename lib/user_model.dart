@@ -10,6 +10,7 @@ class UserPref {
   static const _firstNameKey = 'firstNameKey';
   static const _lastNameKey = 'lastNameKey';
   static const _registrationKey = 'registrationKey';
+  static const _xAuth = 'xAuth';
 
   static Future setOnBoardingStatus({required bool status}) async {
     await _preference?.setBool(onBoardingStatusKey, status);
@@ -18,12 +19,14 @@ class UserPref {
   static Future setUserLoggedInStatus(
       {required String userId,
       required String firstName,
-      required lastName,
-      required registrationNo}) async {
+      required String lastName,
+      required String registrationNo,
+      required String xAuth}) async {
     await _preference?.setString(_userKey, userId);
     await _preference?.setString(_firstNameKey, firstName);
     await _preference?.setString(_lastNameKey, lastName);
     await _preference?.setString(_registrationKey, registrationNo);
+    await _preference?.setString(_xAuth, xAuth);
   }
 
   static bool get onBoardingStatus =>
@@ -35,6 +38,8 @@ class UserPref {
   static String get userLastName => _preference?.getString(_lastNameKey) ?? '';
 
   static String get userKey => _preference?.getString(_userKey) ?? '';
+
+  static String get xAuth => _preference?.getString(_xAuth) ?? '';
 
   static String get userRegistration =>
       _preference?.getString(_registrationKey) ?? '';

@@ -9,7 +9,7 @@ class PageIntro extends StatelessWidget {
   ///percent visible of page
   final double percentVisible;
 
-  /// [MainAxisAligment]
+  /// [MainAxisAlignment]
   final MainAxisAlignment columnMainAxisAlignment;
 
   //Constructor
@@ -31,12 +31,15 @@ class PageIntro extends StatelessWidget {
       child: Opacity(
         //Opacity is used to create fade in effect
         opacity: percentVisible,
-        child: OrientationBuilder(
-            builder: (BuildContext context, Orientation orientation) {
-          return orientation == Orientation.portrait
-              ? _buildPortraitPage(width, height)
-              : __buildLandscapePage();
-        }), //OrientationBuilder
+        child: Container(
+          color: pageViewModel.pageColor,
+          child: OrientationBuilder(
+              builder: (BuildContext context, Orientation orientation) {
+            return orientation == Orientation.portrait
+                ? _buildPortraitPage(width, height)
+                : __buildLandscapePage();
+          }),
+        ), //OrientationBuilder
       ),
     );
   }
@@ -44,23 +47,20 @@ class PageIntro extends StatelessWidget {
   /// when device is Portrait place title, image and body in a column
   Widget _buildPortraitPage(double width, double height) {
     return Stack(
-      /*   mainAxisAlignment: columnMainAxisAlignment,
-      mainAxisSize: MainAxisSize.max,*/
-
       children: <Widget>[
         _ImagePageTransform(
           percentVisible: percentVisible,
           pageViewModel: pageViewModel,
-          height: height * 0.6,
+          height: height * 0.7,
         ),
         Container(
-          margin: EdgeInsets.only(top: height * 0.5),
+          margin: EdgeInsets.only(top: height * 0.6),
           padding: const EdgeInsets.all(8),
           alignment: Alignment.center,
           decoration: BoxDecoration(
               color: pageViewModel.pageColor,
               borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                  topLeft: Radius.circular(18), topRight: Radius.circular(18))),
           child: Column(
               mainAxisAlignment: columnMainAxisAlignment,
               mainAxisSize: MainAxisSize.min,
@@ -73,7 +73,7 @@ class PageIntro extends StatelessWidget {
                   ),
                 ), //Transform
                 const SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 Flexible(
                   flex: 2,

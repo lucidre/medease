@@ -34,6 +34,8 @@ dependencies:
   shared_preferences: ^2.0.11
   http: ^0.13.4
   jwt_decoder: ^2.0.1
+  file_picker: ^4.3.0
+  cloudinary_public: ^0.11.0
 
 
 dev_dependencies:
@@ -63,6 +65,16 @@ flutter:
     - assets/images/onboarding_2.png
     - assets/images/onboarding_3.png
     - assets/images/avatar_1.jpg
+    - assets/images/dummy1.jpg
+    - assets/images/dummy2.jpg
+    - assets/images/dummy3.jpg
+    - assets/images/dummy4.jpg
+    - assets/images/dummy5.jpg
+    - assets/images/dummy6.jpg
+    - assets/images/dummy7.jpg
+    - assets/images/dummy8.jpg
+    - assets/images/dummy9.jpg
+    - assets/images/full_logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
