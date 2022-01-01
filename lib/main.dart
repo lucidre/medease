@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'helper_widgets/colors.dart';
 import 'helper_widgets/constants.dart';
 import 'intro/intro_screen.dart';
 import 'listeners/menu_model.dart';
@@ -33,14 +32,15 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          canvasColor: AppColors.color4,
+          canvasColor: Colors.white,
+          // canvasColor: AppColors.color4,
           fontFamily: Constants.mulish,
           textTheme: ThemeData.light().textTheme.copyWith(
                 bodyText1: const TextStyle(
                     fontSize: 23,
                     color: Colors.black,
                     fontWeight: FontWeight.w600),
-                bodyText2: const TextStyle(fontSize: 19, color: Colors.black),
+                bodyText2: const TextStyle(fontSize: 18, color: Colors.black),
                 headline1: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

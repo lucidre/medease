@@ -198,7 +198,7 @@ class UserBasicInfoScreen extends StatelessWidget {
                 child: Column(mainAxisSize: MainAxisSize.max, children: [
                   Text(
                     'Health Information',
-                    style: heading1!.copyWith(fontSize: 22),
+                    style: heading1.copyWith(fontSize: 22),
                   ),
                   const Divider(),
                   const SizedBox(
@@ -270,7 +270,9 @@ class UserBasicInfoScreen extends StatelessWidget {
                 ]),
               ),
             ),
-            const SizedBox(height: 15,)
+            const SizedBox(
+              height: 15,
+            )
           ],
         ),
       ),

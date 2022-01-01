@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/page_route.dart';
 
+import '../auth/login_screen.dart';
 import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_route.dart';
+import '../main/profile_screen.dart';
 import '../onboarding/onboarding_screen.dart';
+import '../user_model.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);
@@ -16,37 +19,14 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
-    var themeData = Theme.of(context);
-
     return Scaffold(
       backgroundColor: AppColors.color2,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              minRadius: 50,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'E',
-                  style: themeData.textTheme.headline1!.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 45),
-                ),
-              ),
-              backgroundColor: Colors.blue,
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              'MedEase',
-              style: themeData.textTheme.headline1!
-                  .copyWith(fontSize: 38, color: AppColors.color3),
-            ),
-          ],
+        child: Image.asset(
+          'assets/images/full_logo.png',
+          width: 250,
+          color: AppColors.primary,
+          height: 150,
         ),
       ),
     );
@@ -60,18 +40,18 @@ class _IntroScreenState extends State<IntroScreen> {
 
   void route() {
     var navigatorState = Navigator.of(context);
-    /* if (UserPref.onBoardingStatus) {
+    if (UserPref.onBoardingStatus) {
       if (UserPref.isUserLoggedIn) {
         navigatorState
             .pushReplacement(CustomPageRoute(screen: const ProfileScreen()));
       } else {
-        navigatorState.pushReplacement(
-            CustomPageRoute(screen: const PickSignInOrLoginScreen()));
+        navigatorState
+            .pushReplacement(CustomPageRoute(screen: const LoginScreen()));
       }
-    } else {*/
-    navigatorState
-        .pushReplacement(CustomPageRoute(screen: const OnBoardingScreen()));
-    // }
+    } else {
+      navigatorState
+          .pushReplacement(CustomPageRoute(screen: const OnBoardingScreen()));
+    }
   }
 
   Future startTime() async {

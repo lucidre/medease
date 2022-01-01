@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -10,4 +8,5 @@ class AppColors {
   static const color5 = Color.fromRGBO(180, 180, 180, 1);
   static const color6 = Color.fromRGBO(250, 154, 210, 1);
   static const color7 = Color.fromRGBO(245, 245, 250, 1);
+  static const color8 = Color.fromRGBO(69, 143, 246, 0.2);
 }

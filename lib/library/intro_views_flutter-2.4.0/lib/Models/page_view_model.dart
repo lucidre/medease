@@ -59,10 +59,11 @@ class PageViewModel {
 
   TextStyle get titleTextStyle {
     return const TextStyle(color: Colors.white, fontSize: 50.0)
-        .merge(this.textStyle);
+        .merge(textStyle);
   }
 
   TextStyle get bodyTextStyle {
-    return TextStyle(color: Colors.white, fontSize: 24.0).merge(this.textStyle);
+    return const TextStyle(color: Colors.white, fontSize: 24.0)
+        .merge(textStyle);
   }
 }

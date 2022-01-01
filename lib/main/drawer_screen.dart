@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medease/auth/login_screen.dart';
+import 'package:medease/document_upload/registration/document_registration1.dart';
 import 'package:medease/helper_widgets/auth.dart';
+import 'package:medease/helper_widgets/blue_image.dart';
 import 'package:provider/provider.dart';
 
 import '../about_us/about_us_screen.dart';
 import '../appointment/user_appointment_screen.dart';
-import '../auth/pick_signin_or_signup.dart';
 import '../emergency/emergency_screen.dart';
 import '../helper_widgets/colors.dart';
 import '../helper_widgets/page_route.dart';
@@ -46,15 +48,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
         {
           logOut();
           navigatorState.pushAndRemoveUntil(
-              CustomPageRoute(screen: const PickSignInOrLoginScreen()),
-              (route) => false);
+              CustomPageRoute(screen: const LoginScreen()), (route) => false);
           break;
         }
 
       case MenuModel.upload:
         {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Item Clicked')));
+          navigatorState.pushAndRemoveUntil(
+              CustomPageRoute(screen: const DocumentUpload1Screen()),
+              (route) => route.isFirst);
           break;
         }
       case MenuModel.aboutUs:
@@ -78,87 +80,88 @@ class _DrawerScreenState extends State<DrawerScreen> {
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
     _modelListener = Provider.of<MenuModelListener>(context);
-
-    var textStyleNormal = themeData.textTheme.bodyText1?.copyWith(fontSize: 18);
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
+    var textStyleNormal = themeData.textTheme.bodyText1
+        ?.copyWith(fontSize: 18, fontWeight: FontWeight.w500);
     var textStyleSelected = themeData.textTheme.bodyText1?.copyWith(
       fontSize: 18,
       color: Colors.white,
     );
-    var heading1 = themeData.textTheme.headline1;
+
     return Drawer(
       elevation: 8,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
+      child: SingleChildScrollView(
+        child: Stack(
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).padding.top + 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            BlueImageContainer(
+                height: height * 0.4,
+                width: double.infinity,
+                imageLocation: 'assets/images/dummy1.jpg'),
+            Column(
               children: [
-                CircleAvatar(
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Text(
-                      'E',
-                      style: heading1!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
+                SizedBox(
+                  height: height * 0.065,
+                ),
+                Image.asset(
+                  'assets/images/full_logo.png',
+                  fit: BoxFit.contain,
+                  width: 200,
+                  height: 150,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor,
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(15),
                     ),
                   ),
-                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...MenuModel.mainMenuModels.map((model) {
+                        return buildMenuItems(
+                            MenuModel.mainMenuModels.indexOf(model) ==
+                                _modelListener?.selectedPosition,
+                            model,
+                            textStyleSelected,
+                            textStyleNormal);
+                      }).toList(),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      Divider(
+                        color: (MediaQuery.of(context).platformBrightness ==
+                                Brightness.dark)
+                            ? Colors.white70
+                            : Colors.black38,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                        child: Text(
+                          'Settings',
+                          style: textStyleNormal,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      ...MenuModel.otherMenuModels.map((model) {
+                        return buildMenuItems(
+                            false, model, textStyleSelected, textStyleNormal);
+                      }).toList(),
+                    ],
+                  ),
                 ),
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.black,
-                    ))
               ],
             ),
-            const SizedBox(
-              height: 30,
-            ),
-            ...MenuModel.mainMenuModels.map((model) {
-              return buildMenuItems(
-                  MenuModel.mainMenuModels.indexOf(model) ==
-                      _modelListener?.selectedPosition,
-                  model,
-                  textStyleSelected,
-                  textStyleNormal);
-            }).toList(),
-            const SizedBox(
-              height: 3,
-            ),
-            Divider(
-              color:
-                  (MediaQuery.of(context).platformBrightness == Brightness.dark)
-                      ? Colors.white70
-                      : Colors.black38,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: Text(
-                'Settings',
-                style: textStyleNormal,
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            ...MenuModel.otherMenuModels.map((model) {
-              return buildMenuItems(
-                  false, model, textStyleSelected, textStyleNormal);
-            }).toList(),
           ],
         ),
       ),
@@ -183,7 +186,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 0),
         minLeadingWidth: 10,
         leading: Icon(model.iconData,
-            size: 20, color: (isSelected) ? Colors.white : Colors.black),
+            size: 20, color: (isSelected) ? Colors.white : Colors.black87),
         onTap: () {
           onMenuItemClicked(model);
         },

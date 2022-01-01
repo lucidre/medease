@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:medease/appointment/doctors_appointment_screen.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/helper_widgets/page_route.dart';
-import 'package:medease/models/doctor_list.dart';
+
+import '../helper_widgets/blue_image.dart';
+import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_route.dart';
+import '../models/doctor_list.dart';
+import 'doctors_appointment_screen.dart';
 
 class DoctorListAppointmentScreen extends StatefulWidget {
   const DoctorListAppointmentScreen({Key? key}) : super(key: key);
@@ -19,33 +21,78 @@ class _DoctorListAppointmentScreenState
     var textTheme = Theme.of(context).textTheme;
     var bodyText1 = textTheme.bodyText1;
     var bodyText2 = textTheme.bodyText2;
-    var headingText = textTheme.headline1;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: AppColors.primary,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back),
-          ),
-          title: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(right: 30),
-            child: Text(
-              'Book An Appointment',
-              style: headingText!.copyWith(fontSize: 22),
-            ),
+        body: Stack(
+      children: [
+        BlueImageContainer(
+            height: height * 0.4,
+            width: double.infinity,
+            imageLocation: 'assets/images/dummy7.jpg'),
+        SizedBox(
+          height: height,
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).padding.top,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Book An Appointment',
+                        textAlign: TextAlign.center,
+                        style: bodyText1!.copyWith(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 60,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor,
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 15, bottom: 10),
+                  child: ListView.builder(
+                      padding: const EdgeInsets.all(0),
+                      itemCount: DoctorList.dummyList.length,
+                      itemBuilder: (ctx, index) {
+                        return buildListItem(
+                            bodyText1, bodyText2, DoctorList.dummyList[index]);
+                      }),
+                ),
+              ),
+            ],
           ),
         ),
-        body: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: DoctorList.dummyList.length,
-            itemBuilder: (ctx, index) {
-              return buildListItem(
-                  bodyText1, bodyText2, DoctorList.dummyList[index]);
-            }));
+      ],
+    ));
   }
 
   Card buildListItem(
@@ -64,8 +111,7 @@ class _DoctorListAppointmentScreenState
               screen: const DoctorsAppointmentScreen(), argument: doctorList));
         },
         child: Padding(
-          padding:
-              const EdgeInsets.only(top: 8.0, right: 10, left: 10, bottom: 8),
+          padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,8 +120,8 @@ class _DoctorListAppointmentScreenState
                 borderRadius: const BorderRadius.all(Radius.circular(44)),
                 child: Image.asset(
                   'assets/images/avatar_1.jpg',
-                  width: 88,
-                  height: 88,
+                  width: 70,
+                  height: 70,
                   fit: BoxFit.fitHeight,
                 ),
               ),
@@ -84,7 +130,7 @@ class _DoctorListAppointmentScreenState
               ),
               Expanded(
                 child: SizedBox(
-                  height: 88,
+                  height: 70,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,10 +138,11 @@ class _DoctorListAppointmentScreenState
                     children: [
                       Text(
                         doctorList.name,
-                        style: bodyText1,
+                        style: bodyText2!.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 22),
                       ),
                       const SizedBox(
-                        height: 8,
+                        height: 6,
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.min,
