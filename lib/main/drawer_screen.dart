@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medease/auth/login_screen.dart';
-import 'package:medease/document_upload/registration/document_registration1.dart';
-import 'package:medease/helper_widgets/auth.dart';
-import 'package:medease/helper_widgets/blue_image.dart';
 import 'package:provider/provider.dart';
 
 import '../about_us/about_us_screen.dart';
 import '../appointment/user_appointment_screen.dart';
+import '../auth/login_screen.dart';
+import '../document_upload/registration/document_registration1.dart';
 import '../emergency/emergency_screen.dart';
+import '../helper_widgets/auth.dart';
+import '../helper_widgets/blue_imagency_screen.dart';
 import '../helper_widgets/colors.dart';
 import '../helper_widgets/page_route.dart';
 import '../listeners/menu_model.dart';

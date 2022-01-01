@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:medease/auth/reset_password/reset_password_screen1.dart';
 
 import '../helper_widgets/auth.dart';
 import '../helper_widgets/blue_image.dart';
@@ -7,6 +6,7 @@ import '../helper_widgets/colors.dart';
 import '../helper_widgets/page_route.dart';
 import '../main/profile_screen.dart';
 import 'register_screen.dart';
+import 'reset_password/reset_password_screen1r_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -53,7 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
     switch (response) {
       case '--':
         //login successful_proceed
-
         navigatorState.pushAndRemoveUntil(
             CustomPageRoute(screen: const ProfileScreen()), (route) => false);
         break;

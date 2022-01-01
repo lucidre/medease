@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/blue_image.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/helper_widgets/page_route.dart';
-import 'package:medease/main/drawer_screen.dart';
-import 'package:medease/models/appointment.dart';
+
+import '../helper_widgets/blue_image.dart';
+import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_route.dart';
+import '../main/drawer_screen.dart';
+import '../models/appointment.dart';rt';
 
 import 'doctors_list_appointment_screen.dart';
 

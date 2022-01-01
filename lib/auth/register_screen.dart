@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/auth.dart';
-import 'package:medease/helper_widgets/blue_image.dart';
-import 'package:medease/helper_widgets/page_route.dart';
 
+import '../helper_widgets/auth.dart';
+import '../helper_widgets/blue_image.dart';
 import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_routeolors.dart';
 import 'verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {

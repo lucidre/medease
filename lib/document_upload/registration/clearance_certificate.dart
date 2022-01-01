@@ -1,7 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:medease/document_upload/registration/document_registration1.dart';
-import 'package:medease/helper_widgets/colors.dart';
+
+import '../../helper_widgets/colors.dart';
+import 'document_registration1ors.dart';
 
 class ClearanceCertificateScreen extends StatefulWidget {
   final String clearanceCertificate;
@@ -194,7 +195,7 @@ class _ClearanceCertificateScreenState
             ),
             Text(
               _clearanceCertificate.isEmpty
-                  ? 'Document not uploaded'
+                  ? 'Document not uploaded or in review'
                   : _clearanceCertificate,
               style: bodyText2!.copyWith(
                   color: _clearanceCertificate.isEmpty

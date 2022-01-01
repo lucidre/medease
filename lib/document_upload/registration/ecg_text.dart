@@ -1,39 +1,39 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'document_registration1.dart';
-import '../../helper_widgets/colors.dart';
 
-class HealthCenterBioDataScreen extends StatefulWidget {
-  final String healthCenterBio;
+import '../../helper_widgets/colors.dart';
+import 'document_registration2.dart';
+
+class EcgTestScreen extends StatefulWidget {
+  final String ecgTest;
   final Function(String, String) downloadFile;
   final Function(int, String) updateValue;
   final bool isVerified;
 
-  const HealthCenterBioDataScreen(
+  const EcgTestScreen(
       {Key? key,
-      required this.healthCenterBio,
+      required this.ecgTest,
       required this.downloadFile,
       required this.isVerified,
       required this.updateValue})
       : super(key: key);
 
   @override
-  _HealthCenterBioDataScreenState createState() =>
-      _HealthCenterBioDataScreenState();
+  _EcgTestScreenState createState() => _EcgTestScreenState();
 }
 
-class _HealthCenterBioDataScreenState extends State<HealthCenterBioDataScreen> {
-  String _healthCenterBio = '';
+class _EcgTestScreenState extends State<EcgTestScreen> {
+  String _ecgTest = '';
 
   @override
   void initState() {
     super.initState();
-    _healthCenterBio = widget.healthCenterBio;
+    _ecgTest = widget.ecgTest;
   }
 
   void showFilePicker(int position) async {
     FilePickerResult? result = await FilePicker.platform
-        .pickFiles(type: FileType.any, allowMultiple: false);
+        .pickFiles(type: FileType.image, allowMultiple: false);
 
     if (result != null) {
       var filePath = result.files.single.path ?? "";
@@ -42,7 +42,7 @@ class _HealthCenterBioDataScreenState extends State<HealthCenterBioDataScreen> {
             .showSnackBar(const SnackBar(content: Text('File Selected')));
         widget.updateValue(position, filePath);
         setState(() {
-          _healthCenterBio = filePath;
+          _ecgTest = filePath;
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -185,20 +185,18 @@ class _HealthCenterBioDataScreenState extends State<HealthCenterBioDataScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Health Center Bio Data',
+              'ECG Test',
               style: bodyText1,
             ),
             const SizedBox(
               height: 8,
             ),
             Text(
-              _healthCenterBio.isEmpty
+              _ecgTest.isEmpty
                   ? 'Document not uploaded or in review'
-                  : _healthCenterBio,
+                  : _ecgTest,
               style: bodyText2!.copyWith(
-                  color: _healthCenterBio.isEmpty
-                      ? Colors.red
-                      : Colors.blueAccent),
+                  color: _ecgTest.isEmpty ? Colors.red : Colors.blueAccent),
             ),
             const SizedBox(
               width: 3,
@@ -207,11 +205,10 @@ class _HealthCenterBioDataScreenState extends State<HealthCenterBioDataScreen> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                widget.healthCenterBio.isNotEmpty
+                widget.ecgTest.isNotEmpty
                     ? IconButton(
                         onPressed: () {
-                          widget.downloadFile(
-                              widget.healthCenterBio, 'Health Center Bio Data');
+                          widget.downloadFile(widget.ecgTest, 'ECG Test');
                         },
                         icon: const Icon(
                           Icons.download,
@@ -225,7 +222,7 @@ class _HealthCenterBioDataScreenState extends State<HealthCenterBioDataScreen> {
                     ? Container()
                     : IconButton(
                         onPressed: () {
-                          showUploadDialog(healthCenterPos);
+                          showUploadDialog(ecgTestPos);
                         },
                         icon: const Icon(
                           Icons.upload,

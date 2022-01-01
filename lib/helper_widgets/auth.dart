@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:medease/helper_widgets/constants.dart';
-import 'package:medease/user_model.dart';
+
+import '../user_model.dart';
+import 'constants.dart';
 
 Future<String> signUp({
   required String firstName,
@@ -32,18 +35,6 @@ Future<String> signUp({
     } else {
       return decode['message'];
     }
-
-    // decode = decode['errors'][0]['head'];
-/*    print(decode);
-    if (decode == 'Class:CustomerRepository->createCustomer; emailExist returned exist = exist') {
-      return 'email already exist';
-    } else if (decode ==
-        "Class:CustomerRepository->createCustomer; phoneExist returned 'exist' = exist") {
-      return "phone number exist";
-    } else {
-      return true;
-    }*/
-
   } on SocketException {
     return 'No internet connection.';
   } catch (e) {
@@ -104,10 +95,7 @@ Future<String> resetPassword({required String newPassword}) async {
     var response = await http.post(
       Uri.parse('http://localhost:3000/users/resetpassword'),
       body: jsonEncode(body),
-      headers: {
-        'x-auth':
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjE2MjMzMTYiLCJyZWdObyI6IjEyMzQiLCJlbWFpbCI6ImhhbW1lZG93b2xhYmkyMDAxQGdtYWlsLmNvbSIsImlhdCI6MTYzOTA0MTc0OX0.fkYaO9EAOZVCNkyiloKoAEEZiRP79gKQ1WvLjm4oyek'
-      },
+      headers: {'x-auth': UserPref.xAuth, 'Content-Type': 'application/json'},
     );
 
     var decode = jsonDecode(response.body);
@@ -121,7 +109,7 @@ Future<String> resetPassword({required String newPassword}) async {
   }
 }
 
-Future<Map<String, Object>> stageOneVPStatus() async {
+Future<Map<String, Object>> stageOneVPStatus(BuildContext context) async {
   try {
     var xAuth = UserPref.xAuth;
     var userId = UserPref.userKey;
@@ -130,12 +118,6 @@ Future<Map<String, Object>> stageOneVPStatus() async {
       Constants.getAuthUri('users/$userId/stage_one_vp'),
       headers: {'x-auth': xAuth},
     );
-/*
-{"status":"success","message":"Profile","data":{"profile":{"_id":"61b97c120ef9931ab2aed7ff","status":"in review","comments":[],"user":{"_id":"61b97c120ef9931ab2aed7fd","firstName":"Temitope","lastName":"Oti","registrationNumber":"CSC/2018/149","role":"user"},"__v":0,"passport":"https://res.cloudinary.com/kikks/image/upload/v1640298627/medease/oaomwws712e2u3mkihf9.png","clearance_certificate":"https://res.cloudinary.com/kikks/image/upload/v1640298627/medease/oaomwws712e2u3mkihf9.png"}}}
- {"status":"success","message":"Profile","data":{"profile":{"_id":"61b9d2af8b3dcc8645211dc2","status":"declined","comments":["Are you kidding me? Fifa??!!! as your passport????","Select a clearer passport picture"],"user":{"_id":"61b9d2af8b3dcc8645211dc0","firstName":"Samuel","lastName":"Olufemi","registrationNumber":"CSC/2018/135","role":"user"},"__v":0,"clearance_certificate":"https://via.placeholder.com/728x90.png?text=Clearance+certificate","health_center_bio_data":"https://via.placeholder.com/728x90.png?text=Health+center+Biodata","passport":"https://res.cloudinary.com/kikks/image/upload/v1639873249/medease/cgqswkec6btbuig7uzei.jpg"}}}
-
-in review, declined , incomplete , complete
- */
 
     var decode = jsonDecode(response.body);
 
@@ -165,30 +147,137 @@ in review, declined , incomplete , complete
   }
 }
 
-Future<String> uploadDocument(
+Future<Map<String, Object>> stageTwoVPStatus(BuildContext context) async {
+  try {
+    var xAuth = UserPref.xAuth;
+    var userId = UserPref.userKey;
+
+    var response = await http.get(
+      Constants.getAuthUri('users/$userId/stage_two_vp'),
+      headers: {'x-auth': xAuth},
+    );
+
+    var decode = jsonDecode(response.body);
+
+    if (decode['status'] == 'success') {
+      var body = decode['data']['profile'];
+      var comments = (body['comments']) ?? [];
+      var status = body['status'] ?? "incomplete";
+
+      var eyeTest = body['eye_test_result'] ?? "";
+      var ecgTest = body['ecg_test_result'] ?? "";
+      var urineTest = body['urine_test_result'] ?? "";
+      var haematologyTest = body['hermatology_test_result'] ?? "";
+
+      return {
+        'error': '',
+        'comments': comments,
+        'status': status,
+        'eye_test_result': eyeTest,
+        'ecg_test_result': ecgTest,
+        'urine_test_result': urineTest,
+        'hermatology_test_result': haematologyTest
+      };
+    } else {
+      return {'error': decode['message']};
+    }
+  } on SocketException {
+    return {'error': 'no internet connection'};
+  } catch (e) {
+    return {'error': e.toString()};
+  }
+}
+
+Future<String> uploadDocument1(
     {required String passport,
     required String clearanceCertificate,
-    required String healthCenterBioData}) async {
+    required String healthCenterBioData,
+    required BuildContext context}) async {
   try {
     var xAuth = UserPref.xAuth;
     var userId = UserPref.userKey;
 
     var body = {
-      'passport': passport,
+      "passport": passport,
       "health_center_bio_data": healthCenterBioData,
       "clearance_certificate": clearanceCertificate,
     };
-    var response = await http.post(
-        Constants.getAuthUri('users/$userId/stage_one_vp/submit'),
-        headers: {'x-auth': xAuth},
-        body: body);
 
-    var decode = jsonDecode(response.body);
+    var response = await http.put(
+        Constants.getAuthUri('users/$userId/stage_one_vp'),
+        headers: {'x-auth': xAuth, 'Content-Type': 'application/json'},
+        body: jsonEncode(body));
 
-    return decode['message'];
+    if (response.statusCode == 200) {
+      await http.post(Constants.getAuthUri('users/$userId/stage_one_vp/submit'),
+          headers: {'x-auth': xAuth});
+
+      return "success";
+    } else {
+      return 'Error in uploading files';
+    }
   } on SocketException {
     return 'no internet connection';
   } catch (e) {
     return e.toString();
   }
 }
+
+Future<String> uploadDocument2(
+    {required String eyeTest,
+    required String ecgTest,
+    required String urineTest,
+    required BuildContext context,
+    required String haematologyTest}) async {
+  try {
+    var xAuth = UserPref.xAuth;
+    var userId = UserPref.userKey;
+
+    var body = {
+      'eye_test_result': eyeTest,
+      'ecg_test_result': ecgTest,
+      "urine_test_result": urineTest,
+      "hermatology_test_result": haematologyTest,
+    };
+
+    var response = await http.put(
+        Constants.getAuthUri('users/$userId/stage_two_vp'),
+        headers: {'x-auth': xAuth, 'Content-Type': 'application/json'},
+        body: jsonEncode(body));
+
+    if (response.statusCode == 200) {
+      await http.post(Constants.getAuthUri('users/$userId/stage_two_vp/submit'),
+          headers: {'x-auth': xAuth});
+
+      return "success";
+    } else {
+      return 'Error in uploading files';
+    }
+  } on SocketException {
+    return 'no internet connection';
+  } catch (e) {
+    return e.toString();
+  }
+}
+
+/*
+   await showDialog(
+          context: context,
+          builder: (ctx) {
+            return Container(
+              padding: const EdgeInsets.all(15),
+              child: Material(
+                child: Text(
+                  ''
+                  'Body is ${body.toString()}'
+                  '\n\n'
+                  'x-auth  is ${xAuth}'
+                  '\n\n'
+                  'user id   is ${userId}'
+                  '\n\n'
+                  'responce   is ${summitResponse.body}',
+                ),
+              ),
+            );
+          });
+ */
