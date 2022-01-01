@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medease/helper_widgets/auth.dart';
+import 'package:medease/helper_widgets/page_route.dart';
 
 import '../helper_widgets/colors.dart';
-import '../helper_widgets/page_route.dart';
 import 'verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -12,20 +13,24 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  static const _registrationNumber = "registrationNumber";
-  static const _fullName = "fullName";
+  static const _emailAccount = "emailAccount";
+  static const _firstName = "firstName";
+  static const _lastName = "lastName";
   static const _password = "password";
   final passwordTextEditingController = TextEditingController(text: "");
   final retypePasswordTextEditingController = TextEditingController(text: "");
   bool _isPasswordHidden = true;
   bool _isRetypePasswordHidden = true;
-  final _registrationNumberFocusNode = FocusNode();
+  final _emailNumberFocusNode = FocusNode();
+  final _lastNameFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _retypePasswordFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
-  final _initValues = {
-    _fullName: '',
-    _registrationNumber: '',
+
+  final Map<String, dynamic> _initValues = {
+    _firstName: '',
+    _lastName: '',
+    _emailAccount: '',
     _password: '',
   };
   var password = "";
@@ -48,21 +53,94 @@ class _RegisterScreenState extends State<RegisterScreen> {
     retypePasswordTextEditingController.dispose();
     _passwordFocusNode.dispose();
     _retypePasswordFocusNode.dispose();
-    _registrationNumberFocusNode.dispose();
+    _lastNameFocusNode.dispose();
+    _emailNumberFocusNode.dispose();
     super.dispose();
   }
 
-  _saveForm() {
+  void _saveForm() {
     final isValid = _form.currentState?.validate();
     if ((isValid ?? false) == false) {
       return;
     }
     _form.currentState?.save();
-    Navigator.of(context).push(
-      CustomPageRoute(
-        screen: const VerificationScreen(),
+    showRegistrationStatus();
+  }
+
+  Future showRegistrationStatus() async {
+    var textTheme = Theme.of(context).textTheme.bodyText1;
+
+    Dialog dialog = Dialog(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      elevation: 5,
+      child: Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            borderRadius: const BorderRadius.all(Radius.circular(15))),
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator.adaptive()),
+            const SizedBox(
+              height: 30,
+            ),
+            Text(
+              'Loading....',
+              style: textTheme,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "Progressbar",
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (_, __, ___) => dialog,
+      transitionBuilder: (_, anim, __, child) => FadeTransition(
+        opacity: Tween(begin: 0.0, end: 1.0).animate(anim),
+        child: child,
+      ),
+    );
+    var navigatorState = Navigator.of(context);
+
+    final registrationNumber = _initValues[_emailAccount];
+    final password = _initValues[_password];
+    final firstName = _initValues[_firstName];
+    final lastName = _initValues[_lastName];
+
+    final String response = await signUp(
+        firstName: firstName,
+        lastName: lastName,
+        registrationNumber: registrationNumber,
+        password: password);
+    switch (response) {
+      case '--':
+        //login successful_proceed
+        navigatorState.pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration Successful')));
+        navigatorState.push(
+          CustomPageRoute(
+            screen: const VerificationScreen(),
+          ),
+        );
+        break;
+      default:
+        //error occurred, handle error
+        navigatorState.pop();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(response)));
+        break;
+    }
   }
 
   @override
@@ -130,28 +208,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
-                    labelText: "Full Name",
+                    labelText: "First Name",
                   ),
                   style: textStyle2,
                   onFieldSubmitted: (_) {
-                    FocusScope.of(context)
-                        .requestFocus(_registrationNumberFocusNode);
+                    FocusScope.of(context).requestFocus(_lastNameFocusNode);
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please provide your full name.';
+                      return 'Please provide your first name.';
                     }
                     return null;
                   },
                   onSaved: (value) {
-                    _initValues[_fullName] = value ?? "";
+                    _initValues[_firstName] = value ?? "";
                   },
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 TextFormField(
-                  focusNode: _registrationNumberFocusNode,
+                  focusNode: _lastNameFocusNode,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: "Last Name",
+                  ),
+                  style: textStyle2,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_emailNumberFocusNode);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please provide your last name.';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _initValues[_lastName] = value ?? "";
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  focusNode: _emailNumberFocusNode,
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     labelText: "Registration Number",
@@ -163,11 +263,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please provide your registration number.';
-                    }
+                    } /* else if (!RegExp(r"[a-zA-Z]{3}/[0-9]{4}/[0-9]+$")
+                        .hasMatch(value)) {
+                      return "Please provide a valid registration number";
+                    }*/
                     return null;
                   },
                   onSaved: (value) {
-                    _initValues[_registrationNumber] = value ?? "";
+                    _initValues[_emailAccount] = value ?? "";
                   },
                 ),
                 const SizedBox(
@@ -203,6 +306,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return 'Please provide  your password';
                     } else if (value != retypePassword) {
                       return 'Passwords are not the same';
+                    } else if (value.length < 6) {
+                      return 'Password must be more than 6 letters';
                     }
                     return null;
                   },
@@ -247,11 +352,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return 'Please provide  your password';
                     } else if (value != password) {
                       return 'Passwords are not the same';
+                    } else if (value.length < 6) {
+                      return 'Password must be more than 6 letters';
                     }
                     return null;
-                  },
-                  onSaved: (value) {
-                    //
                   },
                 ),
                 const SizedBox(

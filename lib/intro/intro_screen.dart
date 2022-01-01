@@ -59,8 +59,19 @@ class _IntroScreenState extends State<IntroScreen> {
   }
 
   void route() {
-    Navigator.of(context)
+    var navigatorState = Navigator.of(context);
+    /* if (UserPref.onBoardingStatus) {
+      if (UserPref.isUserLoggedIn) {
+        navigatorState
+            .pushReplacement(CustomPageRoute(screen: const ProfileScreen()));
+      } else {
+        navigatorState.pushReplacement(
+            CustomPageRoute(screen: const PickSignInOrLoginScreen()));
+      }
+    } else {*/
+    navigatorState
         .pushReplacement(CustomPageRoute(screen: const OnBoardingScreen()));
+    // }
   }
 
   Future startTime() async {

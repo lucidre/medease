@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:medease/library/intro_views_flutter-2.4.0/lib/Models/page_view_model.dart';
+import 'package:medease/library/intro_views_flutter-2.4.0/lib/intro_views_flutter.dart';
+import 'package:medease/user_model.dart';
 
 import '../auth/pick_signin_or_signup.dart';
-import '../helper_widgets/colors.dart';
 import '../helper_widgets/constants.dart';
 import '../helper_widgets/page_route.dart';
-import '../library/intro_views_flutter-2.4.0/lib/Models/page_view_model.dart';
-import '../library/intro_views_flutter-2.4.0/lib/intro_views_flutter.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
@@ -17,16 +17,16 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final _fontHeaderStyle = const TextStyle(
       fontFamily: Constants.spartan,
+      color: Colors.black,
       fontSize: 24.0,
       fontWeight: FontWeight.bold,
       letterSpacing: 1.5);
-  final _fontDescriptionStyle = const TextStyle(
+  final _fontDescriptionStyle = TextStyle(
       fontFamily: Constants.mulish,
+      color: Colors.black.withOpacity(0.7),
       fontSize: 18.0,
       fontWeight: FontWeight.w400);
   List<PageViewModel> pages = [];
-  final List<Color> colors = [Colors.black, Colors.white, Colors.black];
-  int currentPosition = 0;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           bubbleBackgroundColor: Colors.black,
           title: Text(
             'Virtual Health Care For You',
-            style: _fontHeaderStyle.copyWith(color: colors[0]),
+            style: _fontHeaderStyle,
           ),
           body: SizedBox(
             height: 250.0,
@@ -47,24 +47,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 'This can be related to opening one\'s house for house fellowship.We can safely say that the disciples have been with Jesus long enough to know that what he says comes true but the man on the other end may have just been a regular person praying to be used by God or has been shown a sign. another example would be the donkey used by Jesus',
                 softWrap: true,
                 overflow: TextOverflow.fade,
-                style: _fontDescriptionStyle.copyWith(
-                    color: colors[0].withOpacity(0.7)),
+                style: _fontDescriptionStyle,
               ),
             ),
           ),
           mainImage: Image.asset(
-            'assets/images/onboarding_1.png',
-            height: 285.0,
-            width: 285.0,
-            alignment: Alignment.center,
+            'assets/images/avatar_1.jpg',
+            height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.cover,
           )),
       PageViewModel(
-          pageColor: AppColors.primary,
+          pageColor: Colors.white,
           iconColor: Colors.black,
           bubbleBackgroundColor: Colors.black,
           title: Text(
             'Quick Emergency Response',
-            style: _fontHeaderStyle.copyWith(color: colors[1]),
+            style: _fontHeaderStyle,
           ),
           body: SizedBox(
             height: 250.0,
@@ -75,16 +74,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 textAlign: TextAlign.center,
                 softWrap: true,
                 overflow: TextOverflow.fade,
-                style: _fontDescriptionStyle.copyWith(
-                    color: colors[1].withOpacity(0.7)),
+                style: _fontDescriptionStyle,
               ),
             ),
           ),
           mainImage: Image.asset(
-            'assets/images/onboarding_2.png',
-            height: 285.0,
-            width: 285.0,
-            alignment: Alignment.center,
+            'assets/images/avatar_1.jpg',
+            height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.cover,
           )),
       PageViewModel(
           pageColor: Colors.white,
@@ -92,10 +90,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           bubbleBackgroundColor: Colors.black,
           title: Text(
             'Documentation Made Easy',
-            style: _fontHeaderStyle.copyWith(color: colors[2]),
+            style: _fontHeaderStyle,
           ),
           body: SizedBox(
-            height: 250.0,
+            height: double.infinity,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Text(
@@ -103,16 +101,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 textAlign: TextAlign.center,
                 softWrap: true,
                 overflow: TextOverflow.fade,
-                style: _fontDescriptionStyle.copyWith(
-                    color: colors[2].withOpacity(0.7)),
+                style: _fontDescriptionStyle,
               ),
             ),
           ),
           mainImage: Image.asset(
-            'assets/images/onboarding_3.png',
-            height: 285.0,
-            width: 285.0,
-            alignment: Alignment.center,
+            'assets/images/avatar_1.jpg',
+            height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.cover,
           )),
     ];
     super.initState();
@@ -122,26 +119,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     return IntroViewsFlutter(
       pages,
-      onPageSwiped: (position) {
-        setState(() {
-          currentPosition = position;
-        });
-      },
       skipText: Text(
         "SKIP",
         style: _fontDescriptionStyle.copyWith(
-            color: colors[currentPosition],
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.0),
+            fontWeight: FontWeight.w800, letterSpacing: 1.0),
       ),
       doneText: Text(
         "DONE",
         style: _fontDescriptionStyle.copyWith(
-            color: colors[currentPosition],
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.0),
+            fontWeight: FontWeight.w800, letterSpacing: 1.0),
       ),
       onTapDoneButton: () async {
+        UserPref.setOnBoardingStatus(status: true);
         Navigator.of(context).pushReplacement(CustomPageRoute(
           screen: const PickSignInOrLoginScreen(),
         ));

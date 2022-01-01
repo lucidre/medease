@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/colors.dart';
-import 'package:medease/helper_widgets/constants.dart';
 import 'package:provider/provider.dart';
 
+import 'helper_widgets/colors.dart';
+import 'helper_widgets/constants.dart';
 import 'intro/intro_screen.dart';
 import 'listeners/menu_model.dart';
+import 'user_model.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await UserPref.init();
   runApp(const MyApp());
 }
 
@@ -53,4 +55,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

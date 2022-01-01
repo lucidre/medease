@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medease/user_model.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/pick_signin_or_signup.dart';
@@ -268,14 +269,14 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
             height: 20,
           ),
           Text(
-            'Lorem Ipisidom Swep',
+            UserPref.userFullName,
             style: textStyle1!.copyWith(color: Colors.white),
           ),
           const SizedBox(
             height: 8,
           ),
           Text(
-            'Lorem/2025/004',
+            UserPref.userRegistration,
             style: textStyle2!.copyWith(color: Colors.white),
           ),
           const SizedBox(

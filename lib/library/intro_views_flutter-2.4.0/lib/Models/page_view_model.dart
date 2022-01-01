@@ -48,17 +48,18 @@ class PageViewModel {
 
   PageViewModel(
       {required this.pageColor,
-        this.iconImageAssetPath,
+      this.iconImageAssetPath,
       this.bubbleBackgroundColor = const Color(0x88FFFFFF),
-        this.iconColor,
+      this.iconColor,
       required this.title,
       required this.body,
       required this.mainImage,
-        this.bubble,
-        this.textStyle});
+      this.bubble,
+      this.textStyle});
 
   TextStyle get titleTextStyle {
-    return TextStyle(color: Colors.white, fontSize: 50.0).merge(this.textStyle);
+    return const TextStyle(color: Colors.white, fontSize: 50.0)
+        .merge(this.textStyle);
   }
 
   TextStyle get bodyTextStyle {
