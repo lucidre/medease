@@ -4,43 +4,42 @@ import 'package:flutter/services.dart';
 import '../../helper_widgets/auth.dart';
 import '../../helper_widgets/blue_image.dart';
 import '../../helper_widgets/colors.dart';
-import '../../helper_widgets/page_route.dart';
 import '../../main/drawer_screen.dart';
-import 'clearance_certificate.dart';
-import 'document_registration2.dart';
-import 'health_center_bio.dart';
-import 'passport.dart';
+import 'ecg_text.dart';
+import 'eye_test.dart';
+import 'haematology_test.dart';
 import 'upload_file.dart';
+import 'urine_test.dart';
 
-const passportPos = 0;
-const clearanceCertificatePos = 1;
-const healthCenterPos = 2;
+const haematologyPos = 0;
+const eyeTestPos = 1;
+const urineTestPos = 2;
+const ecgTestPos = 3;
 
-class DocumentUpload1Screen extends StatefulWidget {
-  const DocumentUpload1Screen({Key? key}) : super(key: key);
+class DocumentUpload2Screen extends StatefulWidget {
+  const DocumentUpload2Screen({Key? key}) : super(key: key);
 
   @override
-  _DocumentUpload1ScreenState createState() => _DocumentUpload1ScreenState();
+  _DocumentUpload2ScreenState createState() => _DocumentUpload2ScreenState();
 }
 
-class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
+class _DocumentUpload2ScreenState extends State<DocumentUpload2Screen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<String> serverValues = ['', '', ''];
-  List<String> newValues = ['', '', ''];
+  List<String> serverValues = ['', '', '', ''];
+  List<String> newValues = ['', '', '', ''];
   bool _isInitializing = true;
-
   var _comments = [];
 
   int statusPosition = 0;
   final List<String> statuses = [
-    "Please provide these documents for your registration",
+    "Please provide these documents to continue your registration",
     //in complete
     "Document(s) submitted are being review",
     // in review
     "Document(s) uploaded has been declined, please see comment below",
     //declined
-    "Uploaded documents have been verified"
+    "Uploaded document(s) have been verified"
     //complete
   ];
 
@@ -169,18 +168,18 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
   }
 
   void getUserStatus() async {
-    var stageOneStatus = await stageOneVPStatus(context);
-    var error = stageOneStatus['error'] as String;
+    var stageTwoStatus = await stageTwoVPStatus(context);
+    var error = stageTwoStatus['error'] as String;
 
     if (error == '') {
-      var clearanceCertificate =
-          (stageOneStatus['clearanceCertificate']) as String? ?? "";
-      var passport = (stageOneStatus['passport'] as String?) ?? "";
-      var healthCenterBio =
-          (stageOneStatus['healthCenterBioData'] as String?) ?? "";
+      var eyeTest = (stageTwoStatus['eye_test_result']) as String? ?? "";
+      var ecgTest = (stageTwoStatus['ecg_test_result'] as String?) ?? "";
+      var urineTest = (stageTwoStatus['urine_test_result'] as String?) ?? "";
+      var haematologyTest =
+          (stageTwoStatus['hermatology_test_result'] as String?) ?? "";
 
-      _comments = (stageOneStatus['comments'] as List<dynamic>?) ?? [];
-      var status = (stageOneStatus['status'] as String?) ?? "incomplete";
+      _comments = (stageTwoStatus['comments'] as List<dynamic>?) ?? [];
+      var status = (stageTwoStatus['status'] as String?) ?? "incomplete";
 
       if (status == 'incomplete') {
         statusPosition = 0;
@@ -192,14 +191,17 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
         statusPosition = 3;
       }
 
-      serverValues[clearanceCertificatePos] = clearanceCertificate;
-      newValues[clearanceCertificatePos] = clearanceCertificate;
+      serverValues[eyeTestPos] = eyeTest;
+      newValues[eyeTestPos] = eyeTest;
 
-      serverValues[passportPos] = passport;
-      newValues[passportPos] = passport;
+      serverValues[ecgTestPos] = ecgTest;
+      newValues[ecgTestPos] = ecgTest;
 
-      serverValues[healthCenterPos] = healthCenterBio;
-      newValues[healthCenterPos] = healthCenterBio;
+      serverValues[urineTestPos] = urineTest;
+      newValues[urineTestPos] = urineTest;
+
+      serverValues[haematologyPos] = haematologyTest;
+      newValues[haematologyPos] = haematologyTest;
 
       setState(() {
         _isInitializing = false;
@@ -214,52 +216,61 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
   /// check for the file that has changed and add it to a new list of items to upload
   ///
   void submit() async {
-    List uploadValues = ['', '', ''];
+    List uploadValues = ['', '', '', ''];
     List<Map<String, Object>> changedValues = [];
 
-    if (newValues[passportPos].isEmpty ||
-        newValues[clearanceCertificatePos].isEmpty ||
-        newValues[healthCenterPos].isEmpty) {
+    if (newValues[eyeTestPos].isEmpty ||
+        newValues[ecgTestPos].isEmpty ||
+        newValues[urineTestPos].isEmpty ||
+        newValues[haematologyPos].isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please attach missing file(s)')));
     } else {
-      if (newValues[passportPos] != serverValues[passportPos]) {
+      if (newValues[eyeTestPos] != serverValues[eyeTestPos]) {
         changedValues.add({
-          'position': passportPos,
-          'title': 'Passport',
-          'value': newValues[passportPos]
+          'position': eyeTestPos,
+          'title': 'Eye Test',
+          'value': newValues[eyeTestPos]
         });
       } else {
-        uploadValues[passportPos] = newValues[passportPos];
+        uploadValues[eyeTestPos] = newValues[eyeTestPos];
       }
-      if (newValues[clearanceCertificatePos] !=
-          serverValues[clearanceCertificatePos]) {
+      if (newValues[ecgTestPos] != serverValues[ecgTestPos]) {
         changedValues.add({
-          'position': clearanceCertificatePos,
-          'title': 'Clearance Certificate',
-          'value': newValues[clearanceCertificatePos]
+          'position': ecgTestPos,
+          'title': 'ECG Test',
+          'value': newValues[ecgTestPos]
         });
       } else {
-        uploadValues[clearanceCertificatePos] =
-            newValues[clearanceCertificatePos];
+        uploadValues[ecgTestPos] = newValues[ecgTestPos];
       }
-      if (newValues[healthCenterPos] != serverValues[healthCenterPos]) {
+      if (newValues[urineTestPos] != serverValues[urineTestPos]) {
         changedValues.add({
-          'position': healthCenterPos,
-          'title': 'Health Center Bio Data',
-          'value': newValues[healthCenterPos]
+          'position': urineTestPos,
+          'title': 'Urine Test',
+          'value': newValues[urineTestPos]
         });
       } else {
-        uploadValues[healthCenterPos] = newValues[healthCenterPos];
+        uploadValues[urineTestPos] = newValues[urineTestPos];
+      }
+      if (newValues[haematologyPos] != serverValues[haematologyPos]) {
+        changedValues.add({
+          'position': haematologyPos,
+          'title': 'Haematology Test',
+          'value': newValues[haematologyPos]
+        });
+      } else {
+        uploadValues[haematologyPos] = newValues[haematologyPos];
       }
 
       if (changedValues.isEmpty) {
         //noting was changed
-        var message = await uploadDocument1(
-          passport: uploadValues[passportPos],
-          clearanceCertificate: uploadValues[clearanceCertificatePos],
-          healthCenterBioData: uploadValues[healthCenterPos],
+        var message = await uploadDocument2(
+          eyeTest: uploadValues[eyeTestPos],
+          ecgTest: uploadValues[ecgTestPos],
           context: context,
+          urineTest: uploadValues[urineTestPos],
+          haematologyTest: uploadValues[haematologyPos],
         );
 
         if (message == 'success') {
@@ -291,12 +302,14 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
                 final value = element['value'];
                 uploadValues[position] = value;
               }
-              var message = await uploadDocument1(
-                passport: uploadValues[passportPos],
-                clearanceCertificate: uploadValues[clearanceCertificatePos],
-                healthCenterBioData: uploadValues[healthCenterPos],
+              var message = await uploadDocument2(
+                eyeTest: uploadValues[eyeTestPos],
+                ecgTest: uploadValues[ecgTestPos],
+                urineTest: uploadValues[urineTestPos],
+                haematologyTest: uploadValues[haematologyPos],
                 context: context,
               );
+
               Navigator.of(context).pop();
               if (message == 'success') {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -463,8 +476,8 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
   List<Widget> buildBodyOnSuccess(TextStyle textStyle2) {
     return [
       ...(statusPosition == 2 ? buildCommentsSection() : [Container()]),
-      PassportUploadScreen(
-        passport: serverValues[passportPos],
+      HaematologyTestScreen(
+        haematologyTest: serverValues[haematologyPos],
         downloadFile: showDownloadDialog,
         isVerified: statusPosition == 3,
         updateValue: (position, value) {
@@ -474,8 +487,8 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
       const SizedBox(
         height: 8,
       ),
-      ClearanceCertificateScreen(
-        clearanceCertificate: serverValues[clearanceCertificatePos],
+      EyeTestScreen(
+        eyeTest: serverValues[eyeTestPos],
         downloadFile: showDownloadDialog,
         isVerified: statusPosition == 3,
         updateValue: (position, value) {
@@ -485,8 +498,19 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
       const SizedBox(
         height: 8,
       ),
-      HealthCenterBioDataScreen(
-        healthCenterBio: serverValues[healthCenterPos],
+      EcgTestScreen(
+        ecgTest: serverValues[ecgTestPos],
+        downloadFile: showDownloadDialog,
+        isVerified: statusPosition == 3,
+        updateValue: (position, value) {
+          newValues[position] = value;
+        },
+      ),
+      const SizedBox(
+        height: 8,
+      ),
+      UrineTestScreen(
+        urineTest: serverValues[urineTestPos],
         downloadFile: showDownloadDialog,
         isVerified: statusPosition == 3,
         updateValue: (position, value) {
@@ -506,38 +530,15 @@ class _DocumentUpload1ScreenState extends State<DocumentUpload1Screen> {
                   elevation: 5,
                 ),
                 onPressed: () {
-                  submit();
+                  statusPosition == 3
+                      ? ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Next Clicked')))
+                      : submit();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: Text(
                     'Submit',
-                    style: textStyle2.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-      const SizedBox(
-        height: 5,
-      ),
-      statusPosition == 0
-          ? Container()
-          : SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
-                  elevation: 5,
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                      CustomPageRoute(screen: const DocumentUpload2Screen()));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Text(
-                    'Next',
                     style: textStyle2.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),

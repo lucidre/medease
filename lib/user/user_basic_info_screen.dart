@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/colors.dart';
+
+import '../helper_widgets/colors.dart';
 
 class UserBasicInfoScreen extends StatelessWidget {
   const UserBasicInfoScreen({Key? key}) : super(key: key);

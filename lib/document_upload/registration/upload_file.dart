@@ -1,6 +1,7 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/colors.dart';
+
+import '../../helper_widgets/colors.dart';
 
 class UploadFile extends StatefulWidget {
   final Function(List<Map<String, Object>>) pop;

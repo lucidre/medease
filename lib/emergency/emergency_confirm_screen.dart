@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/blue_image.dart';
-import 'package:medease/main/drawer_screen.dart';
 
+import '../helper_widgets/blue_image.dart';
 import '../helper_widgets/colors.dart';
+import '../main/drawer_screenlors.dart';
 
 class EmergencyConfirmScreen extends StatefulWidget {
   const EmergencyConfirmScreen({Key? key}) : super(key: key);

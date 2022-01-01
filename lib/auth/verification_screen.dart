@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:medease/helper_widgets/blue_image.dart';
-import 'package:medease/helper_widgets/page_route.dart';
 
+import '../helper_widgets/blue_image.dart';
 import '../helper_widgets/colors.dart';
+import '../helper_widgets/page_routelors.dart';
 import 'login_screen.dart';
 
 class VerificationScreen extends StatefulWidget {

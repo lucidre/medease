@@ -192,7 +192,9 @@ class _PassportUploadScreenState extends State<PassportUploadScreen> {
               height: 8,
             ),
             Text(
-              _passport.isEmpty ? 'Document not uploaded' : _passport,
+              _passport.isEmpty
+                  ? 'Document not uploaded or in review'
+                  : _passport,
               style: bodyText2!.copyWith(
                   color: _passport.isEmpty ? Colors.red : Colors.blueAccent),
             ),

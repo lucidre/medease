@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:medease/auth/login_screen.dart';
-import 'package:medease/helper_widgets/blue_image.dart';
 import 'package:medease/library/intro_views_flutter-2.4.0/lib/Models/page_view_model.dart';
 import 'package:medease/library/intro_views_flutter-2.4.0/lib/intro_views_flutter.dart';
-import 'package:medease/user_model.dart';
 
+import '../auth/login_screen.dart';
+import '../helper_widgets/blue_image.dart';
 import '../helper_widgets/constants.dart';
 import '../helper_widgets/page_route.dart';
+import '../user_model.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
